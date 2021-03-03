@@ -6,11 +6,8 @@ type Props = {
 	title?: string
 }
 
-const Layout = ({
-	children,
-	title = 'Taylor Vincent, full stack developer portfolio',
-}: Props): JSX.Element => (
-	<div className="dark:text-white dark:bg-gray-900">
+const Layout = ({ children, title = 'Teamleader hardware shop' }: Props): JSX.Element => (
+	<div className="dark:text-white dark:bg-gray-900 min-h-screen p-8">
 		<Head>
 			<title>{title}</title>
 			<meta charSet="utf-8" />

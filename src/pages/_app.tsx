@@ -1,5 +1,5 @@
 import 'tailwindcss/tailwind.css'
-import '../src/global.css'
+import '../global.css'
 
 import type { AppProps } from 'next/app'
 

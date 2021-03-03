@@ -12,9 +12,11 @@ To get started on the challenge even faster I just copied my portfolio code to t
 ```
   npm install
 ```
-or 
+
 ```
-  yarn
+  npm run dev
 ```
+
+will launch a development server @ http://localhost:3000
 
 
