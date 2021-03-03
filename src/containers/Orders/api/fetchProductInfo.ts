@@ -8,8 +8,8 @@ export interface ProductDetailAPIResult {
 export interface ProductDetailAPI {
 	id: string
 	description: string
-	category: number
-	price: number
+	category: string
+	price: string
 }
 
 const fetchProductInfo = async (id: ProductDetailAPI['id']): Promise<ProductDetailAPIResult> => {
@@ -21,7 +21,7 @@ const fetchProductInfo = async (id: ProductDetailAPI['id']): Promise<ProductDeta
 	// if (result && Math.random() > 0.1) {
 	if (result) {
 		return {
-			data: JSON.parse(JSON.stringify(result)),
+			data: result,
 		}
 	} else {
 		console.log('triggering fake error in product API')

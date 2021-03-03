@@ -6,19 +6,18 @@ export interface OrderDetailStoreAPIResult {
 	data?: OrderDetailStore
 	error?: string
 }
-
 export interface OrderDetailStore {
-	id: number
-	'customer-id': number
+	id: string
+	'customer-id': string
 	items: OrderItem[]
-	total: number
+	total: string
 }
 
 export interface OrderItem {
 	'product-id': string
-	quantity: number
-	'unit-price': number
-	total: number
+	quantity: string
+	'unit-price': string
+	total: string
 }
 
 const examples = [exampleOrder1, exampleOrder2, exampleOrder3]
@@ -28,14 +27,15 @@ const fetchOrder = async (id: OrderDetailStore['id']): Promise<OrderDetailStoreA
 	// todo: delete
 	await new Promise((resolve) => setTimeout(resolve, 100))
 
-	if (Math.random() < 0.2) {
+	const order = examples.find((ex) => ex.id === id)
+
+	if (Math.random() < 0.2 || !order) {
 		console.log('triggering fake error in order API')
 		return { error: 'something went wrong' }
 	}
 
-	const result: OrderDetailStore = JSON.parse(JSON.stringify(examples[id]))
-	console.log(`loaded example order${id + 1}.json`)
-	return { data: result }
+	console.log(`loaded example order${id}.json`)
+	return { data: order }
 }
 
 export default fetchOrder
