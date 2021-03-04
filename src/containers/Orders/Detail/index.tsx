@@ -5,16 +5,18 @@ import OrdersDetailForm from './Form'
 import { OrdersDetailError } from './interfaces'
 import RelatedProducts from './RelatedProducts'
 
-const OrdersDetail = (): JSX.Element => {
+interface Props {
+	id: string
+}
+
+const OrdersDetail = ({ id }: Props): JSX.Element => {
 	const [ordersDetailError, setOrdersDetailError] = useState<OrdersDetailError>(null)
 	const [api, setApi] = useState<OrderDetailStoreAPIResult>()
 	const [store, setStore] = useState<OrderDetailStore>()
 	const [postOrderResult, setPostOrderResult] = useState<PostOrderAPIResult>()
 
-	// Pick a random order from the 3 examples to start with.
-	// Can be swapped out with API call.
+	// Fetch the order from api, update the api state and store if successfull, error if failed
 	useEffect(() => {
-		const id = Math.ceil(Math.random() * 3).toString()
 		fetchOrder(id).then((order) => {
 			setApi(order)
 			if (order.data) {
@@ -22,7 +24,7 @@ const OrdersDetail = (): JSX.Element => {
 			}
 			if (order.error) setOrdersDetailError(order.error)
 		})
-	}, [])
+	}, [id])
 
 	const placeOrder = (): void => {
 		if (store) {
