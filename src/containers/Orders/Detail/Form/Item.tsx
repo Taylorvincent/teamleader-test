@@ -3,14 +3,21 @@ import { OrderDetailStore, OrderItem } from '../../api/fetchOrder'
 import fetchProductInfo, { ProductDetailAPIResult } from '../../api/fetchProductInfo'
 import { changeOrdersDetailItemQuantity } from './functions'
 import { SetOrdersDetailError } from '../interfaces'
+import { PostOrderAPIResult } from '../../api/postOrder'
 
 interface Props {
 	item: OrderItem
 	setOrdersDetailError: SetOrdersDetailError
 	setStore: Dispatch<SetStateAction<OrderDetailStore | undefined>>
+	postOrderResult: PostOrderAPIResult | undefined
 }
 
-const OrdersDetailItem = ({ item, setOrdersDetailError, setStore }: Props): JSX.Element | null => {
+const OrdersDetailItem = ({
+	item,
+	setOrdersDetailError,
+	setStore,
+	postOrderResult,
+}: Props): JSX.Element | null => {
 	const [productInfo, setProductInfo] = useState<ProductDetailAPIResult>()
 
 	useEffect(() => {
@@ -35,24 +42,28 @@ const OrdersDetailItem = ({ item, setOrdersDetailError, setStore }: Props): JSX.
 					</p>
 					<p>= {item.total}</p>
 				</div>
-				<button
-					className="p-2 mx-2 text-2xl"
-					onClick={() => changeOrdersDetailItemQuantity(item['product-id'], setStore, -1)}
-				>
-					-
-				</button>
-				<button
-					className="p-2 mx-2 text-2xl"
-					onClick={() => changeOrdersDetailItemQuantity(item['product-id'], setStore, 1)}
-				>
-					+
-				</button>
-				<button
-					className="p-2 mx-2 text-2xl"
-					onClick={() => changeOrdersDetailItemQuantity(item['product-id'], setStore, 'delete')}
-				>
-					X
-				</button>
+				{!postOrderResult && (
+					<>
+						<button
+							className="p-2 mx-2 text-2xl"
+							onClick={() => changeOrdersDetailItemQuantity(item['product-id'], setStore, -1)}
+						>
+							-
+						</button>
+						<button
+							className="p-2 mx-2 text-2xl"
+							onClick={() => changeOrdersDetailItemQuantity(item['product-id'], setStore, 1)}
+						>
+							+
+						</button>
+						<button
+							className="p-2 mx-2 text-2xl"
+							onClick={() => changeOrdersDetailItemQuantity(item['product-id'], setStore, 'delete')}
+						>
+							X
+						</button>
+					</>
+				)}
 			</div>
 		)
 

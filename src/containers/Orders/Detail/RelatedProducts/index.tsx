@@ -6,15 +6,33 @@ import RelatedProductsItem from './Item'
 
 interface Props {
 	setStore: Dispatch<SetStateAction<OrderDetailStore | undefined>>
-	itemIds: string
+	store: OrderDetailStore
 }
-const RelatedProducts = ({ itemIds, setStore }: Props): JSX.Element | null => {
+const RelatedProducts = ({ store, setStore }: Props): JSX.Element | null => {
 	const [api, setApi] = useState<RelatedProductsAPIResult>()
+	const [itemIds, setItemIds] = useState<string>()
+
+	// When the items in the order change, set the ids for the related items
+	useEffect(() => {
+		if (store) {
+			setItemIds(
+				// stringify the array to reduce rerenders if the id's do not change
+				JSON.stringify(
+					store.items.reduce<string[]>((acc, curr) => {
+						acc.push(curr['product-id'])
+						return acc
+					}, [])
+				)
+			)
+		}
+	}, [store])
 
 	useEffect(() => {
-		fetchRelatedProducts(itemIds, 3).then((result) => {
-			setApi(result)
-		})
+		if (itemIds) {
+			fetchRelatedProducts(itemIds, 3).then((result) => {
+				setApi(result)
+			})
+		}
 	}, [itemIds])
 
 	if (api?.data) {

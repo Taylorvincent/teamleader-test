@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import fetchOrder, { OrderDetailStore, OrderDetailStoreAPIResult } from '../api/fetchOrder'
+import postOrder, { PostOrderAPIResult } from '../api/postOrder'
 import OrdersDetailForm from './Form'
 import { OrdersDetailError } from './interfaces'
 import RelatedProducts from './RelatedProducts'
@@ -8,8 +9,7 @@ const OrdersDetail = (): JSX.Element => {
 	const [ordersDetailError, setOrdersDetailError] = useState<OrdersDetailError>(null)
 	const [api, setApi] = useState<OrderDetailStoreAPIResult>()
 	const [store, setStore] = useState<OrderDetailStore>()
-
-	const [itemIds, setItemIds] = useState<string>()
+	const [postOrderResult, setPostOrderResult] = useState<PostOrderAPIResult>()
 
 	// Pick a random order from the 3 examples to start with.
 	// Can be swapped out with API call.
@@ -24,25 +24,18 @@ const OrdersDetail = (): JSX.Element => {
 		})
 	}, [])
 
-	useEffect(() => {
+	const placeOrder = (): void => {
 		if (store) {
-			setItemIds(
-				// stringify the array to reduce rerenders if the id's do not change
-				JSON.stringify(
-					store.items.reduce<string[]>((acc, curr) => {
-						acc.push(curr['product-id'])
-						return acc
-					}, [])
-				)
-			)
+			postOrder(store).then((result) => setPostOrderResult(result))
 		}
-	}, [store])
+	}
 
-	// redundant `||` but in case `ordersDetailError` (triggered in `./Item.tsx`) gets removed or tweaked, the `api?.error` needs to stay
-	if (api?.error || ordersDetailError) {
+	const err = api?.error || ordersDetailError || postOrderResult?.error
+	if (err) {
 		return (
-			<div>
-				<p className="p-8">Looks like something went wrong. Please try again later</p>
+			<div className="p-8">
+				<h2>Error:</h2>
+				<p>{err}</p>
 			</div>
 		)
 	}
@@ -54,8 +47,10 @@ const OrdersDetail = (): JSX.Element => {
 					store={store}
 					setStore={setStore}
 					setOrdersDetailError={setOrdersDetailError}
+					placeOrder={placeOrder}
+					postOrderResult={postOrderResult}
 				></OrdersDetailForm>
-				{itemIds && <RelatedProducts itemIds={itemIds} setStore={setStore}></RelatedProducts>}
+				<RelatedProducts store={store} setStore={setStore}></RelatedProducts>
 			</div>
 		)
 	}

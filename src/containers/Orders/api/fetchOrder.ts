@@ -31,7 +31,7 @@ const fetchOrder = async (id: OrderDetailStore['id']): Promise<OrderDetailStoreA
 
 	if (Math.random() < 0.2 || !order) {
 		console.log('triggering fake error in order API')
-		return { error: 'something went wrong' }
+		return { error: 'something went wrong while fetching your order' }
 	}
 
 	console.log(`loaded example order${id}.json`)
