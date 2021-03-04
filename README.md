@@ -14,10 +14,10 @@ To get started on the challenge faster I just copied my portfolio code to this r
 ```
 
 ```
-  npm run dev
+  npm run build && npm run start
 ```
 
-This will launch a development server @ http://localhost:3000
+This will launch a production server @ http://localhost:3000
 
 
 ## Entry point
