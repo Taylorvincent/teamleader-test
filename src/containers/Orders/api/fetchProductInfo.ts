@@ -1,4 +1,5 @@
 import productDummyApi from '../../../../test-copy/data/products.json'
+import { GeneralFakeAPIError } from '../../../interfaces'
 
 export interface ProductDetailAPIResult {
 	data?: ProductDetailAPI
@@ -12,21 +13,32 @@ export interface ProductDetailAPI {
 	price: string
 }
 
-const fetchProductInfo = async (id: ProductDetailAPI['id']): Promise<ProductDetailAPIResult> => {
-	// add some fake async delay
-	// todo: delete
+const fakeApi = async (
+	id: ProductDetailAPI['id']
+): Promise<ProductDetailAPI | GeneralFakeAPIError> => {
+	console.log('fetching product info...')
 	await new Promise((resolve) => setTimeout(resolve, 100))
 
-	const result = productDummyApi.find((p) => p.id === id)
-	// if (result && Math.random() > 0.1) {
-	if (result) {
+	const product = productDummyApi.find((p) => p.id === id)
+
+	if (Math.random() < 0.05 || !product) {
+		console.log('triggering fake error in product API')
+		return { error: true, message: 'Something went wrong fetching product information' }
+	}
+
+	return product
+}
+
+const fetchProductInfo = async (id: ProductDetailAPI['id']): Promise<ProductDetailAPIResult> => {
+	const result = await fakeApi(id)
+
+	if ('error' in result) {
 		return {
-			data: result,
+			error: result.message,
 		}
 	} else {
-		console.log('triggering fake error in product API')
 		return {
-			error: 'Something went wrong fetching product information',
+			data: result,
 		}
 	}
 }

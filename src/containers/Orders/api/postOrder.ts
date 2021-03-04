@@ -1,3 +1,4 @@
+import { GeneralFakeAPIError, GeneralFakeAPISuccess } from '../../../interfaces'
 import { OrderDetailStore } from './fetchOrder'
 
 export interface PostOrderAPIResult {
@@ -5,21 +6,35 @@ export interface PostOrderAPIResult {
 	success?: boolean
 }
 
-const postOrder = async (store: OrderDetailStore): Promise<PostOrderAPIResult> => {
-	// add some fake async delay
-	// todo: delete
+const fakeApi = async (
+	store: OrderDetailStore
+): Promise<GeneralFakeAPISuccess | GeneralFakeAPIError> => {
 	console.log('posting order...', store)
-	await new Promise((resolve) => setTimeout(resolve, 300))
-	//
-	if (Math.random() < 0.7) {
-		console.log('success!')
+	await new Promise((resolve) => setTimeout(resolve, 100))
+
+	if (Math.random() < 0.2) {
+		console.log('posting order failed :(')
+		return {
+			error: true,
+			message: 'Something went wrong while placing your order 😢, try again later',
+		}
+	}
+
+	console.log('posting order success!')
+	return {
+		success: true,
+	}
+}
+
+const postOrder = async (store: OrderDetailStore): Promise<PostOrderAPIResult> => {
+	const result = await fakeApi(store)
+	if ('success' in result) {
 		return {
 			success: true,
 		}
 	} else {
-		console.log('failed :(')
 		return {
-			error: 'Something went wrong while placing your order 😢, try again later',
+			error: result.message,
 		}
 	}
 }

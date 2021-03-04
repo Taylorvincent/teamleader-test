@@ -24,7 +24,7 @@ const OrdersDetailItem = ({
 		fetchProductInfo(item['product-id']).then((result) => {
 			setProductInfo(result)
 		})
-	})
+	}, [item])
 
 	useEffect(() => {
 		if (productInfo?.error) setOrdersDetailError(productInfo.error)

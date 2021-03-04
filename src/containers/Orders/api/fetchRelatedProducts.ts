@@ -1,4 +1,5 @@
 import productDummyApi from '../../../../test-copy/data/products.json'
+import { GeneralFakeAPIError } from '../../../interfaces'
 
 export interface RelatedProductsAPIResult {
 	data?: RelatedProductsAPI[]
@@ -12,29 +13,36 @@ export interface RelatedProductsAPI {
 	price: string
 }
 
-const fakeApi = (itemIds: string[], amount: number): RelatedProductsAPIResult['data'] => {
-	const filtered = productDummyApi.filter((item) => !itemIds.includes(item.id))
-	return filtered.slice(0, amount)
+const fakeApi = async (
+	itemIds: string[],
+	amount: number
+): Promise<RelatedProductsAPI[] | GeneralFakeAPIError> => {
+	console.log('fetching related products...')
+
+	await new Promise((resolve) => setTimeout(resolve, 100))
+	const filtered = productDummyApi.filter((item) => !itemIds.includes(item.id)).slice(0, amount)
+
+	if (Math.random() < 0.05 || !filtered) {
+		console.log('triggering fake error in related products API')
+		return { error: true, message: 'Something went wrong fetching the related products' }
+	}
+
+	return filtered
 }
 
 const fetchRelatedProducts = async (
 	itemIds: string,
 	amount: number
 ): Promise<RelatedProductsAPIResult> => {
-	// add some fake async delay
-	// todo: delete
-	await new Promise((resolve) => setTimeout(resolve, 100))
+	const result = await fakeApi(JSON.parse(itemIds), amount)
 
-	const result = fakeApi(JSON.parse(itemIds), amount)
-	// if (result && Math.random() > 0.1) {
-	if (result) {
+	if ('error' in result) {
 		return {
-			data: result,
+			error: result.message,
 		}
 	} else {
-		console.log('triggering fake error in related products API')
 		return {
-			error: 'Something went wrong fetching related products information',
+			data: result,
 		}
 	}
 }
