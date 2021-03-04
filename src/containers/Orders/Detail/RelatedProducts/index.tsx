@@ -35,27 +35,23 @@ const RelatedProducts = ({ store, setStore }: Props): JSX.Element | null => {
 		}
 	}, [itemIds])
 
-	if (api?.data) {
+	if (api) {
 		return (
 			<div>
 				<h3 className="mb-8">People also ordered:</h3>
 				<div className="flex">
-					{api.data.map((product) => (
-						<RelatedProductsItem
-							key={product.id}
-							product={product}
-							setStore={setStore}
-						></RelatedProductsItem>
-					))}
+					{api.data &&
+						api.data.map((product) => (
+							<RelatedProductsItem
+								key={product.id}
+								product={product}
+								setStore={setStore}
+							></RelatedProductsItem>
+						))}
+					{api.error}
 				</div>
 			</div>
 		)
-	}
-
-	// let's just log the error for now
-	if (api?.error) {
-		console.error(api.error)
-		return null
 	}
 
 	return <div>Loading...</div>
