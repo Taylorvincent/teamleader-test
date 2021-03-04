@@ -1,13 +1,13 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { OrderDetailStore, OrderItem } from '../api/fetchOrder'
-import fetchProductInfo, { ProductDetailAPIResult } from '../api/fetchProductInfo'
-import { changeOrdersDetailItemQuantity } from './Form/functions'
-import { SetOrdersDetailError } from './interfaces'
+import { OrderDetailStore, OrderItem } from '../../api/fetchOrder'
+import fetchProductInfo, { ProductDetailAPIResult } from '../../api/fetchProductInfo'
+import { changeOrdersDetailItemQuantity } from './functions'
+import { SetOrdersDetailError } from '../interfaces'
 
 interface Props {
 	item: OrderItem
 	setOrdersDetailError: SetOrdersDetailError
-	setStore: Dispatch<SetStateAction<OrderDetailStore>>
+	setStore: Dispatch<SetStateAction<OrderDetailStore | undefined>>
 }
 
 const OrdersDetailItem = ({ item, setOrdersDetailError, setStore }: Props): JSX.Element | null => {

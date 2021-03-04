@@ -1,9 +1,10 @@
 import { Dispatch, SetStateAction } from 'react'
 import { OrderDetailStore } from '../../api/fetchOrder'
+import { ProductDetailAPI } from '../../api/fetchProductInfo'
 
 export type ChangeOrdersDetailItemQuantity = (
 	productId: string,
-	setStore: Dispatch<SetStateAction<OrderDetailStore>>,
+	setStore: Dispatch<SetStateAction<OrderDetailStore | undefined>>,
 	quantityChange: number | 'delete'
 ) => void
 
@@ -13,6 +14,7 @@ export const changeOrdersDetailItemQuantity: ChangeOrdersDetailItemQuantity = (
 	quantityChange
 ) => {
 	setStore((prevStore) => {
+		if (!prevStore) return undefined
 		const itemToChangeIndex = prevStore.items.findIndex((item) => item['product-id'] === productId)
 
 		if (itemToChangeIndex < 0) return prevStore
@@ -42,6 +44,28 @@ export const changeOrdersDetailItemQuantity: ChangeOrdersDetailItemQuantity = (
 			...prevStore,
 			items: newItems,
 			total: toFakeMoneyDisplay(newTotal),
+		}
+	})
+}
+
+export const addItemToOrderDetail = (
+	product: ProductDetailAPI,
+	setStore: Dispatch<SetStateAction<OrderDetailStore | undefined>>
+): void => {
+	setStore((prevStore) => {
+		if (prevStore) {
+			return {
+				...prevStore,
+				items: [
+					...prevStore.items,
+					{
+						'unit-price': product.price,
+						'product-id': product.id,
+						quantity: '1',
+						total: product.price,
+					},
+				],
+			}
 		}
 	})
 }

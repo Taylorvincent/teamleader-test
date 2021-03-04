@@ -5,8 +5,8 @@ const IndexPage = (): JSX.Element => {
 	return (
 		<Layout>
 			<h1>Teamleader hardware shop</h1>
+			<p className="mt-4 mb-16 text-soft">Vincent Taylor's Teamleader test.</p>
 			<OrdersDetail />
-			<footer className="text-soft">Vincent Taylor's Teamleader test.</footer>
 		</Layout>
 	)
 }

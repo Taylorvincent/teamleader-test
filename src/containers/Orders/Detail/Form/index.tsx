@@ -1,18 +1,17 @@
-import { useState } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 import { OrderDetailStore } from '../../api/fetchOrder'
 import { SetOrdersDetailError } from '../interfaces'
-import OrdersDetailItem from '../Item'
+import OrdersDetailItem from './Item'
 
 interface Props {
-	apiData: OrderDetailStore
+	store: OrderDetailStore
+	setStore: Dispatch<SetStateAction<OrderDetailStore | undefined>>
 	setOrdersDetailError: SetOrdersDetailError
 }
 
-const OrdersDetailForm = ({ apiData, setOrdersDetailError }: Props): JSX.Element => {
-	const [store, setStore] = useState<OrderDetailStore>(apiData)
-
+const OrdersDetailForm = ({ store, setStore, setOrdersDetailError }: Props): JSX.Element => {
 	return (
-		<div className="p-8 max-w-xl">
+		<div className="p-8 max-w-xl mb-16">
 			<h2 className="mb-4">Your order (#{store.id})</h2>
 			{store.items.map((item) => {
 				return (

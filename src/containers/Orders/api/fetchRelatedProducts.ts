@@ -1,31 +1,31 @@
 import productDummyApi from '../../../../test-copy/data/products.json'
 
-export interface ProductDetailAPIResult {
-	data?: ProductDetailAPI[]
+export interface RelatedProductsAPIResult {
+	data?: RelatedProductsAPI[]
 	error?: string
 }
 
-export interface ProductDetailAPI {
+export interface RelatedProductsAPI {
 	id: string
 	description: string
 	category: string
 	price: string
 }
 
-const fakeApi = (amount: number) => {
-	// Shuffle array
-	const shuffled = productDummyApi.sort(() => 0.5 - Math.random())
-
-	// Get sub-array of first n elements after shuffled
-	return shuffled.slice(0, amount)
+const fakeApi = (itemIds: string[], amount: number): RelatedProductsAPIResult['data'] => {
+	const filtered = productDummyApi.filter((item) => !itemIds.includes(item.id))
+	return filtered.slice(0, amount)
 }
 
-const fetchRelatedProducts = async (amount: number): Promise<ProductDetailAPIResult> => {
+const fetchRelatedProducts = async (
+	itemIds: string,
+	amount: number
+): Promise<RelatedProductsAPIResult> => {
 	// add some fake async delay
 	// todo: delete
 	await new Promise((resolve) => setTimeout(resolve, 100))
 
-	const result = fakeApi(amount)
+	const result = fakeApi(JSON.parse(itemIds), amount)
 	// if (result && Math.random() > 0.1) {
 	if (result) {
 		return {

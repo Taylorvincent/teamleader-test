@@ -1,4 +1,4 @@
 ✅ If you land on the detail page of an order, we need see its items (with description, price, ...) and total.
 ✅ We need to be able to remove a product from the order
-❌ We need to be able to add an additional product to the order
+✅ We need to be able to add an additional product to the order
 ❌ We need to be able to place the order and receive a confirmation of its success (or failure)
